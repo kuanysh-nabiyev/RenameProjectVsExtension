@@ -26,7 +26,7 @@ namespace Core
         public IEnumerable<string> SolutionProjects { get; set; }
 
         internal string ProjectUniqueNameNew => ProjectUniqueName.Replace(ProjectName, ProjectNameNew);
-        internal string ProjectFullNameNew => ProjectFullName.Replace(ProjectUniqueName, ProjectUniqueNameNew);
+        internal string ProjectFullNameNew => ProjectFullName.Replace(ProjectName, ProjectNameNew);
 
         public void FullRename()
         {
