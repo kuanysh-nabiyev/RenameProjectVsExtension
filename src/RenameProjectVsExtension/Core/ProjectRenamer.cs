@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 using ChinhDo.Transactions;
 
+[assembly: InternalsVisibleTo("Core.UnitTests")]
 namespace Core
 {
     public class ProjectRenamer
     {
         private readonly TxFileManager _fileManager;
+        private string _projectUniqueName;
 
         public ProjectRenamer()
         {
@@ -21,7 +24,13 @@ namespace Core
         public string SolutionFullName { get; set; }
         public string ProjectFullName { get; set; }
         public string ProjectName { get; set; }
-        public string ProjectUniqueName { get; set; }
+
+        public string ProjectUniqueName
+        {
+            get { return $@"{GetFolderOfUniqueName(_projectUniqueName)}\{_projectUniqueName.GetFileName()}";}
+            set { _projectUniqueName = value; }
+        }
+
         public string ProjectNameNew { get; set; }
         public IEnumerable<string> SolutionProjects { get; set; }
 
@@ -53,15 +62,13 @@ namespace Core
 
         public void RenameFolder()
         {
-            string projectFolderFullPath = Path.GetDirectoryName(this.ProjectFullName);
-            string projectNewFolderFullPath = Path.GetDirectoryName(this.ProjectFullNameNew);
-            Directory.Move(projectFolderFullPath, projectNewFolderFullPath);
+            Directory.Move(this.ProjectFullName.GetDirectoryName(), this.ProjectFullNameNew.GetDirectoryName());
         }
 
         public void RenameFile()
         {
             var fullNameWithRenamedFolder =
-                Path.Combine(Path.GetDirectoryName(ProjectFullNameNew), Path.GetFileName(ProjectFullName));
+                Path.Combine(ProjectFullNameNew.GetDirectoryName(), ProjectFullName.GetFileName());
             _fileManager.Move(fullNameWithRenamedFolder, this.ProjectFullNameNew);
         }
 
@@ -77,12 +84,15 @@ namespace Core
 
         public void RenameAssemblyInformation()
         {
-            var projectDirectory = Path.GetDirectoryName(ProjectFullNameNew);
+            var projectDirectory = ProjectFullNameNew.GetDirectoryName();
             var assemblyInfoFilePath = Path.Combine(projectDirectory, @"Properties\AssemblyInfo.cs");
-            string assemblyInfoFileText = File.ReadAllText(assemblyInfoFilePath);
+            if (File.Exists(assemblyInfoFilePath))
+            {
+                string assemblyInfoFileText = File.ReadAllText(assemblyInfoFilePath);
 
-            assemblyInfoFileText = assemblyInfoFileText.Replace(ProjectName, ProjectNameNew);
-            _fileManager.WriteAllText(assemblyInfoFilePath, assemblyInfoFileText);
+                assemblyInfoFileText = assemblyInfoFileText.Replace(ProjectName, ProjectNameNew);
+                _fileManager.WriteAllText(assemblyInfoFilePath, assemblyInfoFileText);
+            }
         }
 
         public void RenameInSolutionFile()
@@ -114,9 +124,14 @@ namespace Core
 
         public void RollbackRenameFolder()
         {
-            string projectFolderFullPath = Path.GetDirectoryName(this.ProjectFullName);
-            string projectNewFolderFullPath = Path.GetDirectoryName(this.ProjectFullNameNew);
-            Directory.Move(projectNewFolderFullPath, projectFolderFullPath);
+            Directory.Move(this.ProjectFullNameNew.GetDirectoryName(), this.ProjectFullName.GetDirectoryName());
+        }
+
+        public string GetFolderOfUniqueName(string projectUniqueName)
+        {
+            var directoryName = projectUniqueName.GetDirectoryName();
+            var directoryInfo = new DirectoryInfo(directoryName);
+            return directoryInfo.Name;
         }
     }
 }
