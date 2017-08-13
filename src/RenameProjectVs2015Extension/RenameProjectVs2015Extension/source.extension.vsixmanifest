@@ -1,26 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="FullRename.kuanysh-nabiyev.8a8b599d-eca9-46ee-8173-c678bec372af" Version="1.1" Language="en-US" Publisher="Kuanysh Nabiyev" />
-    <DisplayName>Full Rename Project</DisplayName>
+    <Identity Id="FullRename2015.kuanysh-nabiyev.977cebd2-68b1-4ea8-a122-c453bf2f7e78" Version="1.1" Language="en-US" Publisher="Куаныш Набиев" />
+    <DisplayName>RenameProjectVs2015Extension</DisplayName>
     <Description xml:space="preserve">Rename project name in:
 project location folder, 
 solution,
 reference in other projects,
 assembly name, information
 default namespace</Description>
-    <ReleaseNotes>fix bug: rename projects which have been added as existing project</ReleaseNotes>
     <Tags>rename, fullrename</Tags>
   </Metadata>
   <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" d:Source="Installed" Version="[14.0]" />
   </Dependencies>
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
-  </Prerequisites>
   <Assets>
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
   </Assets>
