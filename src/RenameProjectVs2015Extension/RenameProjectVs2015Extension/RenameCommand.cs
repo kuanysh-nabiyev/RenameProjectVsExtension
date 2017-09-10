@@ -126,6 +126,19 @@ namespace RenameProjectVs2015Extension
                 SolutionProjects = dteSolutionHelper.GetSolutionProjects().Select(it => it.FullName)
             };
 
+            if (IsSharedProject(selectedProject))
+            {
+                projectRenamer = new SharedTypeProjectRenamer
+                {
+                    SolutionFullName = projectRenamer.SolutionFullName,
+                    ProjectFullName = selectedProject.FullName,
+                    ProjectName = selectedProject.Name,
+                    ProjectUniqueName = Path.ChangeExtension(selectedProject.UniqueName, null),
+                    ProjectNameNew = newProjectName,
+                    SolutionProjects = projectRenamer.SolutionProjects
+                };
+            }
+
             try
             {
                 projectRenamer.FullRename();
@@ -139,6 +152,13 @@ namespace RenameProjectVs2015Extension
             {
                 messageBoxHelper.ShowErrorMessage(ex);
             }
+        }
+
+        private bool IsSharedProject(Project selectedProject)
+        {
+            if (Path.GetExtension(selectedProject.FileName) == ".shproj")
+                return true;
+            return false;
         }
     }
 }

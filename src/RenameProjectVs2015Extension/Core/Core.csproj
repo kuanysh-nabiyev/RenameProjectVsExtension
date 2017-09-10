@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="ProjectRenamer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SharedTypeProjectRenamer.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

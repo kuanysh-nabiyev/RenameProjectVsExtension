@@ -12,12 +12,12 @@ namespace Core
 {
     public class ProjectRenamer
     {
-        private readonly TxFileManager _fileManager;
+        protected readonly TxFileManager FileManager;
         private string _projectUniqueName;
 
         public ProjectRenamer()
         {
-            _fileManager = new TxFileManager();
+            FileManager = new TxFileManager();
         }
 
         public string SolutionFullName { get; set; }
@@ -26,7 +26,7 @@ namespace Core
 
         public string ProjectUniqueName
         {
-            get { return $@"{GetFolderOfUniqueName(_projectUniqueName)}\{_projectUniqueName.GetFileName()}";}
+            get { return $@"{GetFolderOfUniqueName(_projectUniqueName)}\{_projectUniqueName.GetFileName()}"; }
             set { _projectUniqueName = value; }
         }
 
@@ -45,10 +45,12 @@ namespace Core
                 using (TransactionScope scope = new TransactionScope())
                 {
                     RenameFile();
+                    RenameUserExtensionFile();
                     RenameAssemblyNameAndDefaultNamespace();
                     RenameAssemblyInformation();
                     RenameInSolutionFile();
                     RenameInProjectReferences();
+                    CustomRenameForProjectType();
                     scope.Complete();
                 }
             }
@@ -68,20 +70,30 @@ namespace Core
         {
             var fullNameWithRenamedFolder =
                 Path.Combine(ProjectFullNameNew.GetDirectoryName(), ProjectFullName.GetFileName());
-            _fileManager.Move(fullNameWithRenamedFolder, this.ProjectFullNameNew);
+            FileManager.Move(fullNameWithRenamedFolder, this.ProjectFullNameNew);
         }
 
-        public void RenameAssemblyNameAndDefaultNamespace()
+        public void RenameUserExtensionFile()
+        {
+            var fullNameWithRenamedFolder =
+                Path.Combine(ProjectFullNameNew.GetDirectoryName(), ProjectFullName.GetFileName() + ".user");
+            if (File.Exists(fullNameWithRenamedFolder))
+            {
+                FileManager.Move(fullNameWithRenamedFolder, this.ProjectFullNameNew + ".user");
+            }
+        }
+
+        public virtual void RenameAssemblyNameAndDefaultNamespace()
         {
             string projFileText = File.ReadAllText(ProjectFullNameNew);
             projFileText = projFileText
                 .ReplaceWithTag(this.ProjectName, this.ProjectNameNew, "AssemblyName")
                 .ReplaceWithTag(this.ProjectName, this.ProjectNameNew, "RootNamespace");
 
-            _fileManager.WriteAllText(ProjectFullNameNew, projFileText);
+            FileManager.WriteAllText(ProjectFullNameNew, projFileText);
         }
 
-        public void RenameAssemblyInformation()
+        public virtual void RenameAssemblyInformation()
         {
             var projectDirectory = ProjectFullNameNew.GetDirectoryName();
             var assemblyInfoFilePath = Path.Combine(projectDirectory, @"Properties\AssemblyInfo.cs");
@@ -90,7 +102,7 @@ namespace Core
                 string assemblyInfoFileText = File.ReadAllText(assemblyInfoFilePath);
 
                 assemblyInfoFileText = assemblyInfoFileText.Replace(ProjectName, ProjectNameNew);
-                _fileManager.WriteAllText(assemblyInfoFilePath, assemblyInfoFileText);
+                FileManager.WriteAllText(assemblyInfoFilePath, assemblyInfoFileText);
             }
         }
 
@@ -100,7 +112,7 @@ namespace Core
             slnFileText = slnFileText
                 .Replace(this.ProjectUniqueName, this.ProjectUniqueNameNew)
                 .Replace($"\"{this.ProjectName}\"", $"\"{this.ProjectNameNew}\"");
-            _fileManager.WriteAllText(this.SolutionFullName, slnFileText);
+            FileManager.WriteAllText(this.SolutionFullName, slnFileText);
         }
 
         public void RenameInProjectReferences()
@@ -115,7 +127,7 @@ namespace Core
                         projFileText = projFileText
                             .Replace(this.ProjectUniqueName, this.ProjectUniqueNameNew)
                             .ReplaceWithTag(this.ProjectName, this.ProjectNameNew, "Name");
-                        _fileManager.WriteAllText(projectFullName, projFileText);
+                        FileManager.WriteAllText(projectFullName, projFileText);
                     }
                 }
             }
@@ -131,6 +143,11 @@ namespace Core
             var directoryName = projectUniqueName.GetDirectoryName();
             var directoryInfo = new DirectoryInfo(directoryName);
             return directoryInfo.Name;
+        }
+
+        public virtual void CustomRenameForProjectType()
+        {
+
         }
     }
 }

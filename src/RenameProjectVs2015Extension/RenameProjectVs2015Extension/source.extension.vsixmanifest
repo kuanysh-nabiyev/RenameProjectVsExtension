@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="FullRename2015.kuanysh-nabiyev.977cebd2-68b1-4ea8-a122-c453bf2f7e78" Version="1.1" Language="en-US" Publisher="Куаныш Набиев" />
+    <Identity Id="FullRename2015.kuanysh-nabiyev.977cebd2-68b1-4ea8-a122-c453bf2f7e78" Version="1.2" Language="en-US" Publisher="Куаныш Набиев" />
     <DisplayName>RenameProjectVs2015Extension</DisplayName>
     <Description xml:space="preserve">Rename project name in:
 project location folder, 
