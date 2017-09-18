@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.VisualStudio.PlatformUI;
+using VSIX.Helpers;
 
 namespace VSIX
 {
@@ -35,6 +36,17 @@ namespace VSIX
         private void Cancel_OnClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private void Readme_OnClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(@"
+1. Only for C# projects. 
+2. 'namespace oldProjectName' will be changed to 'namespace newProjectName' in the renamed(selected) project.
+3. 'using oldProjectName' will be changed to 'using newProjectName' in the referenced projects", 
+                string.Empty, 
+                MessageBoxButton.OK, 
+                MessageBoxImage.Information);
         }
     }
 

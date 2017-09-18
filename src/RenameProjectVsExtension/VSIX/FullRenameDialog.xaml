@@ -15,13 +15,23 @@
         <TextBox Text="{Binding ProjectName, Mode=TwoWay}"
                  Margin="10,2" />
 
-        <CheckBox IsChecked="{Binding IsNecessaryToRenameClassNamespace, Mode=TwoWay}"
-                  Content="Rename namespaces (on beta stage). Only for C# projects"
-                  Margin="10,5,0,10"
-                  IsEnabled="{Binding CanRenameNamespace}"/>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
-            <Button Content="OK" Width="70" Margin="0,0,10,0" Click="OK_OnClick"/>
-            <Button Content="Cancel" Width="70" Click="Cancel_OnClick"/>
+        <StackPanel Orientation="Horizontal">
+            <CheckBox IsChecked="{Binding IsNecessaryToRenameClassNamespace, Mode=TwoWay}"
+                      Content="Rename namespaces (on beta stage)"
+                      Margin="10,5,10,10"
+                      IsEnabled="{Binding CanRenameNamespace}" />
+            <Button Content="Readme" Height="20" Padding="10,0" Click="Readme_OnClick"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,10,0">
+            <Button Content="OK"
+                    Width="70"
+                    Margin="0,0,10,0"
+                    Click="OK_OnClick" />
+            <Button Content="Cancel"
+                    Width="70"
+                    Click="Cancel_OnClick" />
         </StackPanel>
     </StackPanel>
 </platformUi:DialogWindow>
