@@ -163,6 +163,7 @@ namespace Core
                         projFileText,
                         $"using{spaces}{ProjectName}",
                         $"using {ProjectNameNew}");
+                    projFileText = projFileText.Replace($"{ProjectName}.", $"{ProjectNameNew}.");
                     FileManager.WriteAllText(filePath, projFileText);
                 }
             }
