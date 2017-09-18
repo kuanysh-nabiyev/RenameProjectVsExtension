@@ -43,7 +43,8 @@ namespace VSIX
             MessageBox.Show(@"
 1. Only for C# projects. 
 2. 'namespace oldProjectName' will be changed to 'namespace newProjectName' in the renamed(selected) project.
-3. 'using oldProjectName' will be changed to 'using newProjectName' in the referenced projects", 
+3. 'using oldProjectName' will be changed to 'using newProjectName' in the referenced projects
+4. 'oldProjectName.ClassName' will be changed to 'newProjectName.ClassName'", 
                 string.Empty, 
                 MessageBoxButton.OK, 
                 MessageBoxImage.Information);
