@@ -151,6 +151,13 @@ namespace Core
                     projFileText = projFileText.Replace($"namespace {ProjectName}", $"namespace {ProjectNameNew}");
                     FileManager.WriteAllText(filePathWithRenamedFolder, projFileText);
                 }
+
+                foreach (string filePath in NamespaceRenamer.SolutionFiles)
+                {
+                    string projFileText = File.ReadAllText(filePath);
+                    projFileText = projFileText.Replace($"using {ProjectName}", $"using {ProjectNameNew}");
+                    FileManager.WriteAllText(filePath, projFileText);
+                }
             }
         }
 
