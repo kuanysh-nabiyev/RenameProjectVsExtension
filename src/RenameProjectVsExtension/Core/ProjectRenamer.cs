@@ -144,18 +144,25 @@ namespace Core
         {
             if (NamespaceRenamer.IsNecessaryToRename)
             {
+                var spaces = @"[ ]{1,}";
                 foreach (string projectFilePath in NamespaceRenamer.ProjectFiles)
                 {
                     var filePathWithRenamedFolder = projectFilePath.Replace(ProjectFullName.GetDirectoryName(), ProjectFullNameNew.GetDirectoryName());
                     string projFileText = File.ReadAllText(filePathWithRenamedFolder);
-                    projFileText = projFileText.Replace($"namespace {ProjectName}", $"namespace {ProjectNameNew}");
+                    projFileText = Regex.Replace(
+                        projFileText,
+                        $"namespace{spaces}{ProjectName}",
+                        $"namespace {ProjectNameNew}");
                     FileManager.WriteAllText(filePathWithRenamedFolder, projFileText);
                 }
 
                 foreach (string filePath in NamespaceRenamer.SolutionFiles)
                 {
                     string projFileText = File.ReadAllText(filePath);
-                    projFileText = projFileText.Replace($"using {ProjectName}", $"using {ProjectNameNew}");
+                    projFileText = Regex.Replace(
+                        projFileText,
+                        $"using{spaces}{ProjectName}",
+                        $"using {ProjectNameNew}");
                     FileManager.WriteAllText(filePath, projFileText);
                 }
             }
