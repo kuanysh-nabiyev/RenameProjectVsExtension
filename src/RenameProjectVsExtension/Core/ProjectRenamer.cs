@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Transactions;
 using ChinhDo.Transactions;
@@ -19,6 +22,7 @@ namespace Core
         public ProjectRenamer()
         {
             FileManager = new TxFileManager();
+            NamespaceRenamer = new NamespaceRenamer();
         }
 
         public string SolutionFullName { get; set; }
@@ -27,12 +31,13 @@ namespace Core
 
         public string ProjectUniqueName
         {
-            get { return $@"{GetFolderOfUniqueName(_projectUniqueName)}\{_projectUniqueName.GetFileName()}";}
-            set { _projectUniqueName = value; }
+            get => $@"{GetFolderOfUniqueName(_projectUniqueName)}\{_projectUniqueName.GetFileName()}";
+            set => _projectUniqueName = value;
         }
 
         public string ProjectNameNew { get; set; }
         public IEnumerable<string> SolutionProjects { get; set; }
+        public NamespaceRenamer NamespaceRenamer { get; set; }
 
         internal string ProjectUniqueNameNew => ProjectUniqueName.Replace(ProjectName, ProjectNameNew);
         internal string ProjectFullNameNew => ProjectFullName.Replace(ProjectUniqueName, ProjectUniqueNameNew);
@@ -46,12 +51,13 @@ namespace Core
                 using (TransactionScope scope = new TransactionScope())
                 {
                     RenameFile();
+                    RenameNamespaces();
                     RenameUserExtensionFile();
                     RenameAssemblyNameAndDefaultNamespace();
                     RenameAssemblyInformation();
                     RenameInSolutionFile();
                     RenameInProjectReferences();
-                    CustomRenameForProjectType();
+                    CustomRenameForEachProjectType();
                     scope.Complete();
                 }
             }
@@ -134,7 +140,26 @@ namespace Core
             }
         }
 
-        public void RollbackRenameFolder()
+        public void RenameNamespaces()
+        {
+            if (NamespaceRenamer.IsNecessaryToRename)
+            {
+                foreach (string projectFilePath in NamespaceRenamer.ProjectFiles)
+                {
+                    var filePathWithRenamedFolder = projectFilePath.Replace(ProjectFullName.GetDirectoryName(), ProjectFullNameNew.GetDirectoryName());
+                    string projFileText = File.ReadAllText(filePathWithRenamedFolder);
+                    projFileText = projFileText.Replace($"namespace {ProjectName}", $"namespace {ProjectNameNew}");
+                    FileManager.WriteAllText(filePathWithRenamedFolder, projFileText);
+                }
+            }
+        }
+
+        public virtual void CustomRenameForEachProjectType()
+        {
+
+        }
+
+        private void RollbackRenameFolder()
         {
             Directory.Move(this.ProjectFullNameNew.GetDirectoryName(), this.ProjectFullName.GetDirectoryName());
         }
@@ -144,11 +169,6 @@ namespace Core
             var directoryName = projectUniqueName.GetDirectoryName();
             var directoryInfo = new DirectoryInfo(directoryName);
             return directoryInfo.Name;
-        }
-
-        public virtual void CustomRenameForProjectType()
-        {
-            
         }
     }
 }

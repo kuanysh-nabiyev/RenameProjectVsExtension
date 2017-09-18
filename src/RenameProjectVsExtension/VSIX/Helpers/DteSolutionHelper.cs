@@ -22,7 +22,8 @@ namespace VSIX.Helpers
             if (dte.SelectedItems.Count == 0)
                 return null;
 
-            return dte.SelectedItems.Item(1).Project;
+            var selectedProject = dte.SelectedItems.Item(1).Project;
+            return selectedProject;
         }
 
         public string GetSolutionFullName()
@@ -59,6 +60,57 @@ namespace VSIX.Helpers
             else
             {
                 projects.Add(project);
+            }
+        }
+
+        public IEnumerable<string> GetProjectFiles(Project project)
+        {
+            var projectItems = GetProjectItems(project);
+            return projectItems.Select(a => a.Properties.Item("FullPath").Value.ToString());
+        }
+
+        public IEnumerable<string> GetSolutionFilesExceptSelectedProject(Project selectedProject)
+        {
+            var solutionFiles = new List<string>();
+            foreach (Project project in GetSolutionProjects())
+            {
+                if (project.FullName != selectedProject.FullName)
+                {
+                    solutionFiles.AddRange(GetProjectFiles(project));
+                }
+            }
+            return solutionFiles;
+        }
+
+        public bool IsProjectFilesSaved(Project project)
+        {
+            var projectItems = GetProjectItems(project);
+            return projectItems.All(a => a.Saved);
+        }
+
+        private IEnumerable<ProjectItem> GetProjectItems(Project project)
+        {
+            var projectItems = new List<ProjectItem>();
+            foreach (ProjectItem projectItem in project.ProjectItems)
+            {
+                FindFiles(projectItems, projectItem);
+            }
+            return projectItems;
+        }
+
+        private void FindFiles(IList<ProjectItem> projectItems, ProjectItem item)
+        {
+            if (item.ProjectItems == null || item.ProjectItems.Count == 0)
+            {
+                projectItems.Add(item);
+                return;
+            }
+
+            var items = item.ProjectItems.GetEnumerator();
+            while (items.MoveNext())
+            {
+                var currentItem = (ProjectItem)items.Current;
+                FindFiles(projectItems, currentItem);
             }
         }
     }

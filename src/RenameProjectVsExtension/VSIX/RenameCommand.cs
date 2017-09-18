@@ -105,41 +105,34 @@ namespace VSIX
             var messageBoxHelper = new MessageBoxHelper(this.ServiceProvider);
 
             var selectedProject = dteSolutionHelper.GetSelectedProject();
-
-            string newProjectName;
-            bool isOkButtonClicked = TextInputDialog
-                .Show("Full Rename", "Enter new project name", selectedProject.Name, out newProjectName);
-
-            if (!isOkButtonClicked)
-                return;
-            if (newProjectName == selectedProject.Name)
-                return;
-
-            var projectRenamer = new ProjectRenamer()
+            if (!selectedProject.Saved)
             {
-                SolutionFullName = dteSolutionHelper.GetSolutionFullName(),
-                ProjectFullName = selectedProject.FullName,
-                ProjectName = selectedProject.Name,
-                ProjectUniqueName = selectedProject.UniqueName,
-                ProjectNameNew = newProjectName,
-                SolutionProjects = dteSolutionHelper.GetSolutionProjects().Select(it => it.FullName)
-            };
-
-            if (IsSharedProject(selectedProject))
-            {
-                projectRenamer = new SharedTypeProjectRenamer
-                {
-                    SolutionFullName = projectRenamer.SolutionFullName,
-                    ProjectFullName = selectedProject.FullName,
-                    ProjectName = selectedProject.Name,
-                    ProjectUniqueName = Path.ChangeExtension(selectedProject.UniqueName, null),
-                    ProjectNameNew = newProjectName,
-                    SolutionProjects = projectRenamer.SolutionProjects
-                };
+                messageBoxHelper.ShowInfoMessage("Build/rebuild project before renaming");
+                return;
             }
+
+            if (!dteSolutionHelper.IsProjectFilesSaved(selectedProject))
+            {
+                messageBoxHelper.ShowInfoMessage("Some files are not saved. Save them or build/rebuild project");
+                return;
+            }
+
+            var renameOptions = new RenameOptions
+            {
+                ProjectName = selectedProject.Name,
+                ProjectFullName = selectedProject.FullName
+            };
+            var dialog = new FullRenameDialog(renameOptions);
+            var isOkButtonClicked = dialog.ShowModal();
+
+            if (isOkButtonClicked == false)
+                return;
+            if (renameOptions.ProjectName == selectedProject.Name)
+                return;
 
             try
             {
+                var projectRenamer = ProjectRenamerFactory.Create(selectedProject, renameOptions);
                 projectRenamer.FullRename();
                 messageBoxHelper.ShowSuccessMessage();
             }
@@ -151,13 +144,6 @@ namespace VSIX
             {
                 messageBoxHelper.ShowErrorMessage(ex);
             }
-        }
-
-        private bool IsSharedProject(Project selectedProject)
-        {
-            if (Path.GetExtension(selectedProject.FileName) == ".shproj")
-                return true;
-            return false;
         }
     }
 }

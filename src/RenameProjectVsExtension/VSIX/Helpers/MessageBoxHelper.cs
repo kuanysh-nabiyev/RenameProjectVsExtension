@@ -38,5 +38,16 @@ namespace VSIX.Helpers
                 OLEMSGBUTTON.OLEMSGBUTTON_OK,
                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
+
+        public void ShowInfoMessage(string message, string title = "")
+        {
+            VsShellUtilities.ShowMessageBox(
+                _serviceProvider,
+                message,
+                title,
+                OLEMSGICON.OLEMSGICON_INFO,
+                OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
     }
 }

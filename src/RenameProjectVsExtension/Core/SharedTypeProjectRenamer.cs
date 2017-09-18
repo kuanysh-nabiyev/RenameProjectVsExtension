@@ -20,7 +20,7 @@ namespace Core
         {
         }
 
-        public override void CustomRenameForProjectType()
+        public override void CustomRenameForEachProjectType()
         {
             string projFileText = File.ReadAllText(ProjectFullNameNew);
             projFileText = projFileText.Replace(this.ProjectName, this.ProjectNameNew);

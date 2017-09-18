@@ -1,0 +1,28 @@
+﻿<platformUi:DialogWindow x:Class="VSIX.FullRenameDialog"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                         xmlns:platformUi="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+                         mc:Ignorable="d"
+                         WindowStartupLocation="CenterOwner"
+                         Title="Full rename"
+                         Height="140"
+                         Width="400">
+    <StackPanel Orientation="Vertical">
+        <Label Content="Enter new project name"
+               Margin="4,0,0,0" />
+        <TextBox Text="{Binding ProjectName, Mode=TwoWay}"
+                 Margin="10,2" />
+
+        <CheckBox IsChecked="{Binding IsNecessaryToRenameClassNamespace, Mode=TwoWay}"
+                  Content="Rename namespaces (on beta stage). Only for C# projects"
+                  Margin="10,5,0,10"
+                  IsEnabled="{Binding CanRenameNamespace}"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
+            <Button Content="OK" Width="70" Margin="0,0,10,0" Click="OK_OnClick"/>
+            <Button Content="Cancel" Width="70" Click="Cancel_OnClick"/>
+        </StackPanel>
+    </StackPanel>
+</platformUi:DialogWindow>
+
