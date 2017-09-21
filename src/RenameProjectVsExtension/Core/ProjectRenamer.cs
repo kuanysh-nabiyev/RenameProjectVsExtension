@@ -153,6 +153,11 @@ namespace Core
                         projFileText,
                         $"namespace{spaces}{ProjectName}",
                         $"namespace {ProjectNameNew}");
+                    projFileText = Regex.Replace(
+                        projFileText,
+                        $"using{spaces}{ProjectName}",
+                        $"using {ProjectNameNew}");
+                    projFileText = projFileText.Replace($"{ProjectName}.", $"{ProjectNameNew}.");
                     FileManager.WriteAllText(filePathWithRenamedFolder, projFileText);
                 }
 
