@@ -31,7 +31,12 @@ namespace Core
 
         public string ProjectUniqueName
         {
-            get => $@"{GetFolderOfUniqueName(_projectUniqueName)}\{_projectUniqueName.GetFileName()}";
+            get
+            {
+                if (HasFolder(_projectUniqueName))
+                    return $@"{GetFolderOfUniqueName(_projectUniqueName)}\{_projectUniqueName.GetFileName()}";
+                return _projectUniqueName.GetFileName();
+            }
             set => _projectUniqueName = value;
         }
 
@@ -70,7 +75,10 @@ namespace Core
 
         public void RenameFolder()
         {
-            Directory.Move(this.ProjectFullName.GetDirectoryName(), this.ProjectFullNameNew.GetDirectoryName());
+            if (this.ProjectFullName.GetDirectoryName() != this.ProjectFullNameNew.GetDirectoryName())
+            {
+                Directory.Move(this.ProjectFullName.GetDirectoryName(), this.ProjectFullNameNew.GetDirectoryName());
+            }
         }
 
         public void RenameFile()
@@ -181,7 +189,10 @@ namespace Core
 
         private void RollbackRenameFolder()
         {
-            Directory.Move(this.ProjectFullNameNew.GetDirectoryName(), this.ProjectFullName.GetDirectoryName());
+            if (this.ProjectFullNameNew.GetDirectoryName() != this.ProjectFullName.GetDirectoryName())
+            {
+                Directory.Move(this.ProjectFullNameNew.GetDirectoryName(), this.ProjectFullName.GetDirectoryName());
+            }
         }
 
         public string GetFolderOfUniqueName(string projectUniqueName)
@@ -189,6 +200,14 @@ namespace Core
             var directoryName = projectUniqueName.GetDirectoryName();
             var directoryInfo = new DirectoryInfo(directoryName);
             return directoryInfo.Name;
+        }
+
+        private bool HasFolder(string projectName)
+        {
+            var directoryName = projectName.GetDirectoryName();
+            if (String.IsNullOrEmpty(directoryName))
+                return false;
+            return true;
         }
     }
 }
