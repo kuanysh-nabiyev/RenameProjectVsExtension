@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="FullRename.kuanysh-nabiyev.8a8b599d-eca9-46ee-8173-c678bec372af" Version="2.1" Language="en-US" Publisher="Kuanysh Nabiyev" />
+        <Identity Id="FullRename.kuanysh-nabiyev.8a8b599d-eca9-46ee-8173-c678bec372af" Version="2.2" Language="en-US" Publisher="Kuanysh Nabiyev" />
         <DisplayName>Full Rename Project</DisplayName>
         <Description xml:space="preserve">Rename project name in:
 project location folder, 
@@ -10,7 +10,7 @@ reference in other projects,
 assembly name, information
 default namespace,
 class namespace in each project file</Description>
-        <ReleaseNotes>fix bug: rename namespace in renamed project</ReleaseNotes>
+        <ReleaseNotes>fix bug: the property fullpath is not exist for some project items</ReleaseNotes>
         <Tags>rename, fullrename</Tags>
     </Metadata>
     <Installation>

@@ -66,7 +66,9 @@ namespace VSIX.Helpers
         public IEnumerable<string> GetProjectFiles(Project project)
         {
             var projectItems = GetProjectItems(project);
-            return projectItems.Select(a => a.Properties.Item("FullPath").Value.ToString());
+            return projectItems
+                .Select(a => a.Properties?.Item("FullPath")?.Value?.ToString())
+                .Where(it => !string.IsNullOrEmpty(it));
         }
 
         public IEnumerable<string> GetSolutionFilesExceptSelectedProject(Project selectedProject)
