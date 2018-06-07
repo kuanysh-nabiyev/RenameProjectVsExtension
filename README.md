@@ -13,4 +13,6 @@ In case of error at any stage of renaming project, all changes will be rolled ba
 
 Please, feel free to write about any mistake and suggestion
 
-Download the latest version from https://marketplace.visualstudio.com/items?itemName=KuanyshNabiyev.FullRenameProject
+
+Download the latest version from https://github.com/kuanysh-nabiyev/RenameProjectVsExtension/blob/master/FullRenamer2017-11-13.vsix
+removed from https://marketplace.visualstudio.com/items?itemName=KuanyshNabiyev.FullRenameProject
