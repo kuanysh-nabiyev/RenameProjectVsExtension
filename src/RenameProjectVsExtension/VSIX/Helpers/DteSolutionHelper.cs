@@ -48,19 +48,23 @@ namespace VSIX.Helpers
 
         public void FindProjects(IList<Project> projects, Project project)
         {
-            if (string.IsNullOrEmpty(project.FullName))
+            try
             {
-                for (int j = 1; j <= project.ProjectItems.Count; j++)
+                if (string.IsNullOrEmpty(project.FullName))
                 {
-                    var projectItem = project.ProjectItems.Item(j);
-                    if (projectItem.SubProject != null)
-                        FindProjects(projects, projectItem.SubProject);
+                    for (int j = 1; j <= project.ProjectItems.Count; j++)
+                    {
+                        var projectItem = project.ProjectItems.Item(j);
+                        if (projectItem.SubProject != null)
+                            FindProjects(projects, projectItem.SubProject);
+                    }
+                }
+                else
+                {
+                    projects.Add(project);
                 }
             }
-            else
-            {
-                projects.Add(project);
-            }
+            catch {/* ignored */}
         }
 
         public IEnumerable<string> GetProjectFiles(Project project)
