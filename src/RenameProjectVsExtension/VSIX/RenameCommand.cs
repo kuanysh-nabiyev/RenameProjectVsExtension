@@ -136,6 +136,10 @@ namespace VSIX
                 projectRenamer.FullRename();
                 messageBoxHelper.ShowSuccessMessage();
             }
+            catch (UnauthorizedAccessException uae)
+            {
+                messageBoxHelper.ShowErrorMessage(uae, "You don't have enough permisssion");
+            }
             catch (IOException ioe)
             {
                 messageBoxHelper.ShowErrorMessage(ioe, "Close all folders, text editors related to the project");
