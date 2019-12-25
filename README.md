@@ -1,4 +1,4 @@
-# Rename project name in:
+### Rename project name in:
   - project location folder
   - solution file
   - reference in other projects
@@ -14,3 +14,8 @@ In case of error at any stage of renaming project, all changes will be rolled ba
 Download the latest version from [FullRenamer2019-12-19.vsix](https://github.com/kuanysh-nabiyev/RenameProjectVsExtension/blob/master/readme_files/FullRenamer2019-12-19.vsix)
 
 ![fullrename vs project](https://github.com/kuanysh-nabiyev/RenameProjectVsExtension/blob/master/readme_files/fullrename.png)
+
+#### If you got "Access to the path XXX is denied", try the following:
+https://github.com/kuanysh-nabiyev/RenameProjectVsExtension/issues/17#issuecomment-421806448
+https://github.com/kuanysh-nabiyev/RenameProjectVsExtension/issues/17#issuecomment-421811318
+
